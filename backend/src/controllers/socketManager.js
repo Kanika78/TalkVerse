@@ -1,11 +1,22 @@
 
 import { Server } from 'socket.io';
+let connection = {};
+let message = {};
+let timeOnline = {};
 
 
 const connectToSocket = (server)=>{
-    const io = new Server(server);
+    const io = new Server(server , {
+        cors:{
+            origin : "*",
+            methods: ["GET", "POST"],
+            allowedHeaders: ["*"],
+            credentials: true
+        }
+    });
 
     io.on("connection" , (socket)=>{
+        console.log("something connected");
         socket.on("join-call" , (path)=>{
             if(connection[path] === undefined){
                 connection[path] = [];
@@ -50,7 +61,7 @@ const connectToSocket = (server)=>{
                     "sender" : sender,
                     'socket-id-sender' : socket.id
                 });
-                console.log("message" , key , ":" , sender , data);
+                console.log("message" , matchingRoom , ":" , sender , data);
                 connection[matchingRoom].forEach((id)=>{
                     io.to(id).emit("chat-message" , data , sender , socket.id);
                 })
@@ -60,7 +71,7 @@ const connectToSocket = (server)=>{
         socket.on("disconnect" , ()=>{
             var diffTime = Math.abs(Date.now() - timeOnline[socket.id]);
             var key
-            for(const [k , v] of JSON.entries(JSON.stringify(Object.entries(connection)))){
+            for (const [k, v] of JSON.parse(JSON.stringify(Object.entries(connection)))){
                 for(let a = 0 ; a < v.length ; a++){
                     if(v[a] == socket.id){
                         key = k;

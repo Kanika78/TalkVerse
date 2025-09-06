@@ -13,14 +13,14 @@ const server = createServer(app);
 const io = connectToSocket(server);
 
 
-app.set("port" ,(process.env.PORT || 3000));
-app.use(cors());
+app.set("port" ,(process.env.PORT || 8080));
+app.use(cors({ origin: "*" }));
 app.use(express.json({limit : "40kb"}));
 app.use(express.urlencoded({extended : true, limit : "40kb"}));
 
 app.use("/api/v1/user" , userRoutes);
 const start = async()=>{
-    const connectionDb = await mongoose.connect("mongodb+srv://username:<password>@cluster0.qw2l7mu.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0")
+    const connectionDb = await mongoose.connect("mongodb+srv://goyalkanika702:Kanika112@cluster0.qw2l7mu.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0")
     console.log(`MongoDB connected : ${connectionDb.connection.host}`)
 
     server.listen(app.get("port"), ()=>{

@@ -21,7 +21,7 @@ const login = async(req , res)=>{
             return res.status(httpStatus.OK).json({message : "Login successful", token: token});
         }
     }catch(e){
-        return res.status(httpStatus.INTERNAL_SERVER_ERROR).json({message : `Something went wrong: ${e.message}`});
+        return res.status(httpStatus.UNAUTHORIZED).json({message : `Invalid username and password: ${e.message}`});
     }
 }
 
